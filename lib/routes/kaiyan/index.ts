@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars, require-await, no-console */
+
 import { Route } from '@/types';
 import got from '@/utils/got';
 
