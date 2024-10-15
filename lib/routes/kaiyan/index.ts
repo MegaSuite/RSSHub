@@ -50,7 +50,8 @@ async function handler(ctx) {
                 const releaseTimeMillis = content.releaseTime;
                 const releaseDate = new Date(releaseTimeMillis);
                 const date = releaseDate.toISOString();
-
+		
+		const webUrl = content.webUrl.raw; //网页链接
                 const videoUrl = content.playUrl; // 原装视频链接
                 const itemUrl = `<video src="${content.playUrl}" controls="controls"></video>`; // 视频链接
                 const imgUrl = `<img src="${content.cover.feed}" />`; // ���片链接
@@ -60,7 +61,7 @@ async function handler(ctx) {
                 // ### 设置 RSS feed item
                 const single = {
                     title: title,
-                    link: videoUrl,
+                    link: webUrl,
                     author: author,
                     description: description,
                     pubDate: new Date(date).toUTCString(),
@@ -72,7 +73,7 @@ async function handler(ctx) {
 
     return {
         title: '开眼每日精选',
-        link: 'https://www.eyepetizer.net/',
+        link: 'https://home.eyepetizer.net',
         description: '开眼每日精选',
         item: out.filter(Boolean), // Filter out null values
     };
