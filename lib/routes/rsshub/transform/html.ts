@@ -43,6 +43,7 @@ Specify options (in the format of query string) in parameter \`routeParams\` par
 | \`itemPubDate\`     | The HTML elements as \`pubDate\` in \`item\` using CSS selector                                               | \`string\`      | \`item\` element         |
 | \`itemPubDateAttr\` | The attributes of \`pubDate\` element as pubDate                                                              | \`string\`      | Element html             |
 | \`itemContent\`     | The HTML elements as \`description\` in \`item\` using CSS selector ( in \`itemLink\` page for full content ) | \`string\`      |                          |
+| \`encoding\`        | The encoding of the HTML content                                                                              | \`string\`      | utf-8                    |
 
   Parameters parsing in the above example:
 
@@ -64,14 +65,19 @@ Specify options (in the format of query string) in parameter \`routeParams\` par
         const response = await got({
             method: 'get',
             url,
+            responseType: 'arrayBuffer',
         });
 
         const routeParams = new URLSearchParams(ctx.req.param('routeParams'));
-        const $ = load(response.data);
+        const encoding = routeParams.get('encoding') || 'utf-8';
+        const decoder = new TextDecoder(encoding);
+
+        const $ = load(decoder.decode(response.data));
         const rssTitle = routeParams.get('title') || $('title').text();
         const item = routeParams.get('item') || 'html';
         let items: DataItem[] = $(item)
             .toArray()
+            .slice(0, 20)
             .map((item) => {
                 try {
                     item = $(item);
@@ -86,10 +92,10 @@ Specify options (in the format of query string) in parameter \`routeParams\` par
                     } else {
                         link = linkEle.is('a') ? linkEle.attr('href') : linkEle.find('a').attr('href');
                     }
-                    // 补全绝对链接
+                    // 补全绝对链接或相对链接
                     link = link.trim();
                     if (link && !link.startsWith('http')) {
-                        link = `${new URL(url).origin}${link}`;
+                        link = new URL(link, url).href;
                     }
 
                     const descEle = routeParams.get('itemDesc') ? item.find(routeParams.get('itemDesc')) : item;
@@ -118,16 +124,17 @@ Specify options (in the format of query string) in parameter \`routeParams\` par
                         return item;
                     }
 
-                    return cache.tryGet(item.link, async () => {
+                    return cache.tryGet(`transform:${item.link}:${itemContentSelector}`, async () => {
                         const response = await got({
                             method: 'get',
                             url: item.link,
+                            responseType: 'arrayBuffer',
                         });
                         if (!response || typeof response === 'string') {
                             return item;
                         }
 
-                        const $ = load(response.data);
+                        const $ = load(decoder.decode(response.data));
                         const content = $(itemContentSelector).html();
                         if (!content) {
                             return item;
