@@ -1,17 +1,15 @@
 import path from 'node:path';
 
-import { type CheerioAPI, type Cheerio, type Element, load } from 'cheerio';
+import { type CheerioAPI, type Cheerio, load } from 'cheerio';
+import type { Element } from 'domhandler';
 import { type Context } from 'hono';
 
 import { type DataItem, type Route, type Data, ViewType } from '@/types';
 
 import { art } from '@/utils/render';
 import cache from '@/utils/cache';
-import { getCurrentPath } from '@/utils/helpers';
 import ofetch from '@/utils/ofetch';
 import { parseDate } from '@/utils/parse-date';
-
-const __dirname = getCurrentPath(import.meta.url);
 
 export const handler = async (ctx: Context): Promise<Data> => {
     const { category } = ctx.req.param();
@@ -169,7 +167,7 @@ export const route: Route = {
     parameters: {
         category: '分类，默认为首页，可在对应分类页 URL 中找到',
     },
-    description: `:::tip
+    description: `::: tip
 若订阅 [游戏](https://www.ali213.net/news/zl/game/)，网址为 \`https://www.ali213.net/news/zl/game/\`，请截取 \`https://www.ali213.net/news/zl/\` 到末尾 \`/\` 的部分 \`game\` 作为 \`category\` 参数填入，此时目标路由为 [\`/ali213/zl/game\`](https://rsshub.app/ali213/zl/game)。
 :::
 
