@@ -5,7 +5,7 @@ import { getDataByPlaylistId as getDataByPlaylistIdGoogle } from './api/google';
 
 export const route: Route = {
     path: '/playlist/:id/:embed?',
-    categories: ['social-media', 'popular'],
+    categories: ['social-media'],
     view: ViewType.Videos,
     example: '/youtube/playlist/PLqQ1RwlxOgeLTJ1f3fNMSwhjVgaWKo_9Z',
     parameters: { id: 'YouTube playlist id', embed: 'Default to embed the video, set to any value to disable embedding' },
@@ -31,11 +31,12 @@ export const route: Route = {
 async function handler(ctx) {
     const id = ctx.req.param('id');
     const embed = !ctx.req.param('embed');
+    const isJsonFeed = ctx.req.query('format') === 'json';
 
     const data = await callApi({
         googleApi: getDataByPlaylistIdGoogle,
         youtubeiApi: getDataByPlaylistIdYoutubei,
-        params: { playlistId: id, embed },
+        params: { playlistId: id, embed, isJsonFeed },
     });
 
     return data;
