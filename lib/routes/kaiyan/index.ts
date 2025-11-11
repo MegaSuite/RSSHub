@@ -24,7 +24,7 @@ export const route: Route = {
     name: '开眼精选',
     maintainers: ['Konrad'],
     handler,
-}
+};
 
 async function handler(ctx) {
     const api_url = `https://baobab.kaiyanapp.com/api/v2/feed`;
@@ -52,8 +52,8 @@ async function handler(ctx) {
                 const releaseTimeMillis = content.releaseTime;
                 const releaseDate = new Date(releaseTimeMillis);
                 const date = releaseDate.toISOString();
-		
-		const webUrl = content.webUrl.raw; //网页链接
+
+                const webUrl = content.webUrl.raw; // 网页链接
                 const videoUrl = content.playUrl; // 原装视频链接
                 const itemUrl = `<video src="${content.playUrl}" controls="controls"></video>`; // 视频链接
                 const imgUrl = `<img src="${content.cover.feed}" />`; // ���片链接
@@ -62,10 +62,10 @@ async function handler(ctx) {
 
                 // ### 设置 RSS feed item
                 const single = {
-                    title: title,
+                    title,
                     link: webUrl,
-                    author: author,
-                    description: description,
+                    author,
+                    description,
                     pubDate: new Date(date).toUTCString(),
                 };
                 return single;
