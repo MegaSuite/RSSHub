@@ -1,8 +1,9 @@
-import { Route } from '@/types';
-import utils, { callApi } from './utils';
 import InvalidParameterError from '@/errors/types/invalid-parameter';
-import { getDataByChannelId as getDataByChannelIdYoutubei } from './api/youtubei';
+import type { Route } from '@/types';
+
 import { getDataByChannelId as getDataByChannelIdGoogle } from './api/google';
+import { getDataByChannelId as getDataByChannelIdYoutubei } from './api/youtubei';
+import utils, { callApi } from './utils';
 
 export const route: Route = {
     path: '/channel/:id/:routeParams?',
@@ -29,7 +30,7 @@ export const route: Route = {
 :::
 
 ::: tip
-YouTube provides official RSS feeds for channels, for instance [https://www.youtube.com/feeds/videos.xml?channel\_id=UCDwDMPOZfxVV0x\_dz0eQ8KQ](https://www.youtube.com/feeds/videos.xml?channel_id=UCDwDMPOZfxVV0x_dz0eQ8KQ).
+YouTube provides official RSS feeds for channels, for instance [https://www.youtube.com/feeds/videos.xml?channel_id=UCDwDMPOZfxVV0x_dz0eQ8KQ](https://www.youtube.com/feeds/videos.xml?channel_id=UCDwDMPOZfxVV0x_dz0eQ8KQ).
 :::`,
     features: {
         requireConfig: [

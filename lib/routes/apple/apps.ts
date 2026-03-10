@@ -1,6 +1,8 @@
-import { Route, ViewType } from '@/types';
+import type { DataItem, Route } from '@/types';
+import { ViewType } from '@/types';
 import ofetch from '@/utils/ofetch';
 import { parseDate } from '@/utils/parse-date';
+
 import { appstoreBearerToken } from './utils';
 
 const platformIds = {
@@ -114,8 +116,8 @@ async function handler(ctx) {
     const artistName = attributes.artistName;
     const platformAttributes = attributes.platformAttributes;
 
-    let items = [];
-    let title = '';
+    let items: DataItem[] = [];
+    let title: string;
     let description = '';
     let image = '';
 
